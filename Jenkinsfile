@@ -1,35 +1,46 @@
 pipeline {
-    agent {
-        docker {
-            image 'nhxnnz/demo_angular'
-            args '-p 8004:80'
-        }
+    agent any
+
+    environment {
+        IMAGE_NAME = 'demo_angular'
+        IMAGE_TAG = 'latest'
+        CREDENTIALS_ID = 'Noob_on_Jenkins'
     }
 
     stages {
+        stage('Checkout from SCM') {
+            steps {
+                git branch: 'master',credentialsId: 'Noob_on_Jenkins', url: 'https://github.com/bi12-335-usth/angular_jenkins.git'
+            }
+        }
+
         stage('Install Packages') {
             steps {
-                sh 'npm install'
                 sh 'npm ci'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build -- --output-path=./dist'
+                sh 'npm install'
+                sh 'ng build --prod'
             }
         }
 
-        stage('Test') {
+        stage('Build Docker Image') {
             steps {
-                sh 'npm run test'
+                script {
+                    docker.build("env.demo_angular:latest")
+                }
             }
         }
 
-        stage('Deploy') {
+        stage('Run') {
             steps {
-                sh 'docker build -t nhxnnz/demo_angular.'
-                sh 'docker run -d -p 8004:80 nhxnnz/demo_angular'
+                script {
+                    docker.image("env.demo_angular:latest").run("-p 8004:80")
+                }
+
             }
         }
     }
