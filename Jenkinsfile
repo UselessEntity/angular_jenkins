@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             // Use Docker image with Docker CLI installed
-            image 'docker:latest'
+            image 'jenkins/jenkins:lts'
             // Mount Docker socket so Docker commands can be executed within the container
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
@@ -18,6 +18,13 @@ pipeline {
                 sh 'npm run build --prod'
             }
         }
+
+        stage('Test') {
+            steps {
+                sh 'npm run test'
+            }
+        }
+
         stage('Run Container') {
             steps {
                 // Run the Docker container for the Angular app
