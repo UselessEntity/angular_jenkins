@@ -27,7 +27,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker build -t demo_angular .'
+                sh 'docker build -t nhxnnz/demo_angular:latest .'
                 sh 'docker run -d -p 8004:80 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock nhxnnz/demo_angular:latest'
             }
         }
