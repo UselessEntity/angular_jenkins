@@ -14,6 +14,12 @@ pipeline {
             }
         }
 
+        stage('Install Packages') {
+            steps {
+                sh 'npm ci'
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'npm install'
@@ -21,15 +27,10 @@ pipeline {
             }
         }
 
-        stage('Install Packages') {
-            steps {
-                sh 'npm ci'
-            }
-        }
-        
         stage('Build Docker Image') {
             steps {
                 script {
+                    def dockerfilePath = 'Dockerfile'
                     docker.build("env.demo_angular:latest")
                 }
             }
