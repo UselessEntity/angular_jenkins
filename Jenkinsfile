@@ -9,35 +9,26 @@ pipeline {
     stages {
         stage('Install Packages') {
             steps {
-                // Use the docker.image() method to run commands inside the Angular container
-                docker.image('nhxnnz/demo_angular').inside {
-                    sh 'npm ci'
-                }
+                sh 'docker pull nhxnnz/demo_angular'
+                sh 'docker run -v ${PWD}:/app nhxnnz/demo_angular npm ci'
             }
         }
 
         stage('Build') {
             steps {
-                docker.image('nhxnnz/demo_angular').inside {
-                    sh 'npm run build -- --output-path=./dist'
-                }
+                sh 'docker run -v ${PWD}:/app nhxnnz/demo_angular npm run build -- --output-path=./dist'
             }
         }
 
         stage('Test') {
             steps {
-                docker.image('nhxnnz/demo_angular').inside {
-                    sh 'npm run test'
-                }
+                sh 'docker run -v ${PWD}:/app nhxnnz/demo_angular npm run test'
             }
         }
 
         stage('Deploy') {
             steps {
-                // Build the Docker image for the Angular app
                 sh 'docker build -t nhxnnz/demo_angular:latest .'
-
-                // Run the Angular app container
                 sh 'docker run -d -p 8004:80 nhxnnz/demo_angular:latest'
             }
         }
