@@ -1,34 +1,32 @@
 pipeline {
-    agent {
-        docker {
-            // Use Docker image with Docker CLI installed
-            image 'jenkins/jenkins:lts'
-            // Mount Docker socket so Docker commands can be executed within the container
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
+
     stages {
-        stage('Build Angular App') {
+        stage('Build') {
             steps {
-                // Clone your Angular app repository
-                git 'https://github.com/bi12-335-usth/angular_jenkins.git'
-                
-                // Build the Angular app
-                sh 'npm install'
-                sh 'npm run build --prod'
+                script {
+                    // Build Angular application
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
             }
         }
-
-        stage('Test') {
+        stage('Docker Build') {
             steps {
-                sh 'npm run test'
+                script {
+                    // Build Docker image
+                    docker.build('nhxnnz/demo_angular', '-f Dockerfile .')
+                }
             }
         }
-
-        stage('Run Container') {
+        stage('Docker Run') {
             steps {
-                // Run the Docker container for the Angular app
-                sh 'docker run -d -p 8004:80 --name angular-jenkins nhxnnz/demo_angular'
+                script {
+                    // Run Docker container
+                    docker.image('nhxnnz/demo_angular').withRun('-p 8004:80') {
+                        // Container is running
+                    }
+                }
             }
         }
     }
