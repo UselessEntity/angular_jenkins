@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        PATH = "C:Program Files\nodejs\node_modules\npm\bin" // Replace /path/to/npm/bin with the actual path to npm
-    }
-
     stages {
         stage('Build') {
             steps {
