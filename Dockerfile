@@ -1,5 +1,5 @@
 ### State 1
-FROM node:18.17.1-alpine as build
+FROM node as build
 
 WORKDIR /app
 
