@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'jenkins/jenkins:lts'
-            args '-p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock'
+            args '-d -p 8004:80 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'docker build -t nhxnnz/demo_angular:latest .'
-                sh 'docker run -d -p 8004:80 nhxnnz/demo_angular:latest'
+                sh 'docker run -d -p 8004:80 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock nhxnnz/demo_angular:latest'
             }
         }
     }
