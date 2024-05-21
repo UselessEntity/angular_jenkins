@@ -28,7 +28,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'docker build -t demo_angular .'
-                sh 'docker run -p 8080:80 -d -v jenkins_home:/var/jenkins_home nhxnnz/demo_angular:latest'
+                sh 'docker run -p 8004:80 -d -v jenkins_home:/var/jenkins_home nhxnnz/demo_angular:latest'
             }
         }
     }
