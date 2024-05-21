@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'demo_angular'
+            image 'nhxnnz/demo_angular'
             args '-p 8004:80'
         }
     }
@@ -27,8 +27,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker build -t my-angular-app .'
-                sh 'docker run -d -p 8004:80 demo_angular'
+                sh 'docker build -t demo_angular .'
+                sh 'docker run -d -p 8004:80 nhxnnz/demo_angular'
             }
         }
     }
