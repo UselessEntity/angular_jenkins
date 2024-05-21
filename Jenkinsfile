@@ -14,19 +14,6 @@ pipeline {
             }
         }
 
-        stage('Install Packages') {
-            steps {
-                sh 'npm ci'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'npm install'
-                sh 'ng build --prod'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
