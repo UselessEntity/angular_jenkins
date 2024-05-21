@@ -1,32 +1,35 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'nhxnnz/demo_angular'
+            args '-p 8004:80'
+        }
+    }
 
     stages {
+        stage('Install Packages') {
+            steps {
+                sh 'npm install'
+                sh 'npm ci'
+            }
+        }
+
         stage('Build') {
             steps {
-                script {
-                    // Build Angular application
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
+                sh 'npm run build -- --output-path=./dist'
             }
         }
-        stage('Docker Build') {
+
+        stage('Test') {
             steps {
-                script {
-                    // Build Docker image
-                    docker.build('nhxnnz/demo_angular', '-f Dockerfile .')
-                }
+                sh 'npm run test'
             }
         }
-        stage('Docker Run') {
+
+        stage('Deploy') {
             steps {
-                script {
-                    // Run Docker container
-                    docker.image('nhxnnz/demo_angular').withRun('-p 8004:80') {
-                        // Container is running
-                    }
-                }
+                sh 'docker build -t nhxnnz/demo_angular.'
+                sh 'docker run -d -p 8004:80 nhxnnz/demo_angular'
             }
         }
     }
