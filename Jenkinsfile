@@ -11,6 +11,7 @@ pipeline {
         stage('Checkout from SCM') {
             steps {
                 git branch: 'master',credentialsId: 'Noob_on_Jenkins', url: 'https://github.com/bi12-335-usth/angular_jenkins.git'
+                // When using Jenkinsfile one another server, user needs to cloned they repo before doing so that the server could read the codes
             }
         }
 
